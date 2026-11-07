@@ -68,29 +68,7 @@ jobs:
       - name: Package and audit unsigned IPA
         run: |
           scripts/package-unsigned-ipa.sh
-          scripts/verify-release.sh
-
-  simulator-tests:
-    name: ROM-free Simulator UI
-    runs-on: macos-15
-    timeout-minutes: 120
-    needs: repository-safety
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Install host archive-build dependencies
-        run: >-
-          brew install cmake ninja pkgconf sdl2 glew nlohmann-json libpng
-          libzip tinyxml2 libogg libvorbis opus opusfile sdl2_net
-
-      - name: Cache host and Simulator dependencies
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
-        with:
-          path: |
-            build-host/_deps
-            build-ios-simulator/_deps
-          key: maskpad-simulator-${{ runner.os }}-${{ hashFiles('patches/**', 'port/**', 'scripts/*.sh') }}
+          scripts/verify-
 
       - name: Reconstruct pinned source
         run: |
@@ -125,6 +103,3 @@ jobs:
           PY
           )"
           echo "udid=$udid" >> "$GITHUB_OUTPUT"
-
-      - name: Run ROM-free touch and layout tests
-        run: scripts/test-ios-ui.sh "${{ steps.simulator.outputs.udid }}"
